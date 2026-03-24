@@ -22,6 +22,10 @@ for cargo_toml in crates/*/Cargo.toml; do
   ' "$cargo_toml" > "$tmp" && mv "$tmp" "$cargo_toml"
 done
 
+# Update inter-crate dependency versions (e.g. google-workspace = { version = "X.Y.Z", path = "..." })
+sed -i.bak -E "s/(google-workspace = \{ version = \")[^\"]+/\1${VERSION}/" crates/google-workspace-cli/Cargo.toml
+rm -f crates/google-workspace-cli/Cargo.toml.bak
+
 # Update Cargo.lock to match
 cargo generate-lockfile
 
